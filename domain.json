@@ -1,0 +1,17 @@
+[
+  {"server_ip": "10.10.10.1","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.1","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.2","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.3","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.4","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.5","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.6","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.7","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.8","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.9","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.10","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.11","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.12","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.13","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]},
+  {"server_ip": "10.10.10.14","hostname": "dns-01","port": 53,"domain": ["www.wiki.com","www.baidu.com","www.360.com","www.google.com.cn"]}
+]
