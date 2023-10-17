@@ -1,53 +1,55 @@
-导入dns. 解析器、json、prometheus_client
-从prometheus_client导入仪表
-来自prometheus_client。core导入CollectorRegistry
-从烧瓶导入响应，烧瓶
-从gevent导入pywsgi
-从参数导入get_args
+import dns.resolver, json, prometheus_client
+from prometheus_client import Gauge
+from prometheus_client.core import CollectorRegistry
+from flask import Response, Flask
+from gevent import pywsgi
+from arguments import get_args
 
-应用程序=烧瓶（ __name__ ）
+app = Flask(__name__)
 
-REGISTRY = CollectorRegistry  ( auto_describe= False )
-domain_status = Gauge ( "domain_status" , "DNS 服务器域名状态。" , [ 'server_ip' , 'domain' , 'hostname' ] ,registry=REGISTRY )
+REGISTRY = CollectorRegistry(auto_describe=False)
+domain_status = Gauge("domain_status","DNS server Domain Name status.",['server_ip','domain','hostname'],registry=REGISTRY)
 
-def  get_domain_stats (服务器、端口、域、dns_type= "A" ) :
-    服务器=服务器
-    端口=端口
-    dns_q = dns.dns. 留言。make_query （域，dns_type ）
-    尝试：
-        a = 域名。查询。udp ( dns_q、服务器、端口=端口、超时= 0.1、raise_on_truncation= False )
-        返回 真
-    除外：
-        返回 错误
+def get_domain_stats(server, port, domain, dns_type="A"):
+    server = server
+    port = port
+    dns_q = dns.message.make_query(domain, dns_type)
+    try:
+        a = dns.query.udp(dns_q, server, port=port, timeout=0.1, raise_on_truncation=False)
+        return True
+    except:
+        return False
 
-参数 = get_args ( )
-配置路径=参数。配置
+args = get_args()
+config_path = args.config
 
-def  read_config ( config_path ) :
-    打开 （ config_path ）作为json_file： 
-        配置=json. 加载（ json_file ）
-    返回配置
+def read_config(config_path):
+    with open(config_path) as json_file:
+        config = json.load(json_file)
+    return config
 
-@ app.route ( '/' )
-定义 索引( ) :
-    返回 “<h1>自定义导出器</h1><br><a href='metrics'>指标</a>”
+@app.route('/')
+def index():
+    return "<h1>Customized Exporter</h1><br> <a href='metrics'>Metrics</a>"
 
-@ app.route ( '/metrics' )
-定义 指标( ) :
-    配置=读取配置（配置路径）
-    # 全局().更新(配置)
-    对于配置中的config_list ：
-        dns_list = config_list [ '域' ]
-        服务器 = config_list [ 'server_ip' ]
-        端口 = config_list [ '端口' ]
-        对于dns_list中的dns_name ：
-            结果 = get_domain_stats (服务器、端口、dns_name )
-            如果结果：
-                域状态。标签（ server_ip = config_list [ 'server_ip' ]，domain = dns_name，hostname = config_list [ 'hostname' ] ）。套装( 1 )
-            其他：
-                域状态。标签（ server_ip = config_list [  'server_ip'  ]，domain = dns_name，hostname = config_list [  'hostname'  ]  ）。集(  0  )
-    返回响应( prometheus_client.generate_latest ( REGISTRY ) , mimetype= " text /plain " )  
-如果__name__ == "__main__"：
-    # app.run(主机='0.0.0.0',端口=9119,线程=True)
-    服务器 = pywsgi. WSGIServer（（'0.0.0.0' ，9119 ），应用程序）
-    服务器。永远服务（）
+@app.route('/metrics')
+def metrics():
+    config = read_config(config_path)
+    # globals().update(config)
+    for config_list in config:
+        dns_list = config_list['domain']
+        server = config_list['server_ip']
+        dns_port = config_list['port']
+        for dns_name in dns_list:
+            result = get_domain_stats(server, dns_port, dns_name)
+            if result:
+                domain_status.labels(server_ip=config_list['server_ip'], domain=dns_name, hostname=config_list['hostname']).set(1)
+            else:
+                domain_status.labels(server_ip=config_list['server_ip'], domain=dns_name, hostname=config_list['hostname']).set(0)
+    return Response(prometheus_client.generate_latest(REGISTRY), mimetype="text/plain")
+if __name__ == "__main__":
+    host = args.ipaddress
+    port = args.port
+    # app.run(host='0.0.0.0',port=9119,threaded=True)
+    server = pywsgi.WSGIServer((host, port), app)
+    server.serve_forever()
