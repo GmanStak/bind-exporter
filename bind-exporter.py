@@ -34,6 +34,7 @@ def index():
 
 @app.route('/metrics')
 def metrics():
+    domain_status.clear()
     config = read_config(config_path)
     # globals().update(config)
     for config_list in config:
